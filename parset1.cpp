@@ -18,6 +18,7 @@
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/qi_char_.hpp>
+#include <boost/spirit/include/qi_plus.hpp>
 
 #include <iostream>
 #include <string>
@@ -29,6 +30,8 @@
 //[tutorial_complex_number
 namespace client
 {
+	namespace qi = boost::spirit::qi;
+	
     template <typename Iterator>
     bool parse_namevalue(Iterator first, Iterator last, 
     	std::string& name, std::string& value)
@@ -39,9 +42,8 @@ namespace client
         using boost::spirit::qi::phrase_parse;
         using boost::spirit::ascii::space;
         using boost::phoenix::ref;
+        using qi::lexeme;
 
-        double rN = 0.0;
-        double iN = 0.0;
         std::string strName = "";
         std::string strValue = "";
         
@@ -49,8 +51,8 @@ namespace client
 
             //  Begin grammar
             (
-            	+char_("a-zA-Z0-9")[ref(strName) = _1] 
-            		>> ':' >> +char_("a-zA-Z0-9")[ref(strValue) = _1]
+            	+char_("a-zA-Z0-9") [ref(strName) += _1]
+            		>> ':' >> +char_("a-zA-Z0-9") [ref(strValue) += _1]
             ),
             //  End grammar
 
